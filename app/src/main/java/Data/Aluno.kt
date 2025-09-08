@@ -1,7 +1,10 @@
 package Data
 
-class Aluno (
+import androidx.annotation.DrawableRes
+
+ data  class Aluno (
     val nome: String,
-    val foto: Int,
+    @DrawableRes val foto: Int,
     val curso: String,
+
 )

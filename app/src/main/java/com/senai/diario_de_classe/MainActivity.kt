@@ -1,6 +1,7 @@
 
 import Data.Aluno
 import Data.DataSource
+import android.R.attr.contentDescription
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.senai.diario_de_classe.R
 import com.senai.diario_de_classe.ui.theme.Diario_de_ClasseTheme
 
 class MainActivity : ComponentActivity() {
@@ -120,21 +122,17 @@ fun ListaDeAlunos(
 }
 @Composable
 fun CardAluno(
-
     modifier: Modifier = Modifier,
     @DrawableRes fotoAluno: Int,
-
     nomeAluno: String,
-
     cursoAluno: String
 
 ) {
     Card(
         modifier = modifier
-
             .fillMaxWidth()
-
             .padding(16.dp),
+
         elevation = CardDefaults.cardElevation(8.dp)
 
     ) {
@@ -144,15 +142,12 @@ fun CardAluno(
             horizontalArrangement = Arrangement.Center
         )   {
             Image(
-                painter = painterResource(id = fotoAluno),
+                painter = painterResource(id = fotoAluno ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-
                     .size(150.dp)
-
                     .clip(CircleShape)
-
             )
             Column {
                 Text(text = nomeAluno)
