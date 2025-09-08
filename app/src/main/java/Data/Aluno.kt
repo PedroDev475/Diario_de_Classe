@@ -1,4 +1,7 @@
 package Data
 
-class Aluno {
-}
+class Aluno (
+    val nome: String,
+    val foto: Int,
+    val curso: String,
+)
