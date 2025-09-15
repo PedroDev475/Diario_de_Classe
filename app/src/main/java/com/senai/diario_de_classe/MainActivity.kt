@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -52,113 +53,78 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     DiarioDeClasseApp(
                         modifier = Modifier
-
                             .padding(innerPadding)
-
                             .fillMaxSize()
-
                             .statusBarsPadding()
-
                     )
                 }
             }
         }
     }
-
 }
+
 @Preview(showSystemUi = true)
 @Composable
 fun DiarioDeClasseApp(
-
-    modifier: Modifier = Modifier
-
+    modifier: Modifier = Modifier,
 ) {
     val layoutDirection = LocalLayoutDirection.current
     Surface(
         modifier = Modifier
-
             .fillMaxSize()
-
             .statusBarsPadding()
-
             .padding(
                 start = WindowInsets.safeDrawing.asPaddingValues()
-
                     .calculateStartPadding(layoutDirection),
                 end = WindowInsets.safeDrawing.asPaddingValues()
-
                     .calculateEndPadding(layoutDirection),
-
-                ),
-
-        ) {
+            ),
+    ) {
         ListaDeAlunos(
             modifier = modifier,
             listaDeAlunos = DataSource().carregarAlunos()
-
         )
     }
-
 }
+
 @Composable
 fun ListaDeAlunos(
-
     modifier: Modifier = Modifier,
-
-    listaDeAlunos: List<Aluno>
-
+    listaDeAlunos: List<Aluno>,
 ) {
     LazyColumn(modifier = modifier) {
-        items (listaDeAlunos) { aluno ->
+        items(listaDeAlunos) { aluno ->
             CardAluno(
                 modifier = modifier,
-                fotoAluno = aluno.foto,
                 nomeAluno = aluno.nome,
                 cursoAluno = aluno.curso
             )
         }
     }
-
 }
+
 @Composable
 fun CardAluno(
     modifier: Modifier = Modifier,
-    @DrawableRes fotoAluno: Int,
     nomeAluno: String,
-    cursoAluno: String
-
+    cursoAluno: String,
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-
         elevation = CardDefaults.cardElevation(8.dp)
-
     ) {
         Row(
-            modifier=modifier,
+            modifier = modifier,
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-        )   {
-            Image(
-                painter = painterResource(id = fotoAluno ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape)
-            )
+        ) {
+
             Column {
                 Text(text = nomeAluno)
                 Text(text = cursoAluno)
             }
         }
     }
-
 }
-
-
-
-
-
