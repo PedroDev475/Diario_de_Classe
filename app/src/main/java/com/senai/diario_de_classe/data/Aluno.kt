@@ -1,4 +1,4 @@
-package Data
+package com.senai.diario_de_classe.data
 
 import androidx.annotation.DrawableRes
 
