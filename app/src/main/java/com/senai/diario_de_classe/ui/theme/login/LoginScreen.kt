@@ -1,56 +1,82 @@
 package com.senai.diario_de_classe.ui.theme.login
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.senai.diario_de_classe.login.LoginViewModel
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 @Composable
-fun LoginScreen (
-    onLoginSuccess: () -> Unit,
-    vm: LoginViewModel = hiltViewModel()
-) {
-    val state by vm.state.collectAsState()
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
+    val loginUIState by loginViewModel.uiState.collectAsState()
 
-    Column(
-        Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Login", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(16.dp))
-        OutlinedTextField(
-            value = state.email,
-            onValueChange = vm::onEmailChange,
-            label = { Text("E-mail") },
-            singleLine = true
+    Column {
+        CampoTextoLoginSenha(
+            value = loginViewModel.login,
+            onValueChange = { loginViewModel.mudarTextoLogin(it) },
+            isError = loginUIState.errouLoginOuSenha,
+            label = loginUIState.labelLogin
         )
-        Spacer(Modifier.height(8.dp))
-        OutlinedTextField(
-            value = state.senha,
-            onValueChange = vm::onSenhaChange,
-            label = { Text("Senha") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+        CampoTextoLoginSenha(
+            value = loginViewModel.senha,
+            onValueChange = { loginViewModel.mudarTextoSenha(it) },
+            isError = loginUIState.errouLoginOuSenha,
+            label = loginUIState.labelSenha
         )
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = { vm.login(onLoginSuccess) },
-            enabled = !state.loading
-        ) {
-            if (state.loading)
-                CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-            else Text("Entrar")
-        }
-        state.error?.let {
-            Spacer(Modifier.height(8.dp))
-            Text(it, color = MaterialTheme.colorScheme.error)
-        }
+        BotaoLogar(
+            onClick = {
+                loginViewModel.logar()
+            }
+        )
+        if(loginUIState.loginSucesso)
+            Text("Logoooou!!!!!")
+
     }
 }
 
+@Composable
+fun CampoTextoLoginSenha(
+    value: String = "",
+    onValueChange: (String) -> Unit,
+    label: String = "",
+    isError: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = {
+            Text(text = label)
+        },
+        isError = isError,
+        singleLine = true,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun BotaoLogar(
+    onClick:()-> Unit,
+    modifier: Modifier = Modifier
+){
+    Button(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Text(
+            text =  "Entrar"
+        )
+    }
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun PreviewLogin(){
+    LoginScreen()
+}
