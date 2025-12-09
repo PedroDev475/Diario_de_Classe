@@ -4,12 +4,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.senai.diario_de_classe.data.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val repository: AuthRepository
+) : ViewModel(){
+
     private val _uiState = MutableStateFlow(LoginUIState())
     val uiState: StateFlow<LoginUIState> = _uiState.asStateFlow()
 
@@ -30,13 +39,19 @@ class LoginViewModel : ViewModel() {
     }
 
     fun logar() {
-        if (senha.equals("1234") && login.equals("rafa")) {
-            _uiState.update { currentState ->
-                currentState.copy(loginSucesso = true)
-            }
-        } else {
-            _uiState.update { currentState ->
-                currentState.copy(errouLoginOuSenha = true)
+        viewModelScope.launch {
+            val usuario = repository.login(login, senha)
+
+            if (usuario != null) {
+                _uiState.update { currentState ->
+                    currentState.copy(loginSucesso = true, errouLoginOuSenha = false)
+
+                }
+            } else {
+                _uiState.update { currentState ->
+                    currentState.copy(errouLoginOuSenha = true, loginSucesso = false)
+
+                }
             }
         }
     }
